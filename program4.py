@@ -1,14 +1,7 @@
-processes = [
-    {"pid": "P1", "arrival": 0, "burst": 7},
-    {"pid": "P2", "arrival": 2, "burst": 4},
-    {"pid": "P3", "arrival": 4, "burst": 1},
-    {"pid": "P4", "arrival": 5, "burst": 4},
-]
-
 from threading import Thread, current_thread
-from multiprocessing import Process, Pipe, Value
+from multiprocessing import Process, Value
 
-# --- Part A: Data and Metrics (From Image) ---
+# --- Part A: Data and Metrics ---
 processes = [
     {"pid": "P1", "arrival": 0, "burst": 7},
     {"pid": "P2", "arrival": 2, "burst": 4},
@@ -42,13 +35,13 @@ def calculate_metrics():
         wt_total += wt
         rt_total += rt
 
-        print(p["pid"], p["arrival"], p["burst"],
-              completion, tat, wt, rt)
+        print(p["pid"], p["arrival"], p["burst"], completion, tat, wt, rt)
 
     n = len(processes)
-    print("Average TAT =", round(tat_total/n,2))
-    print("Average WT =", round(wt_total/n,2))
-    print("Average RT =", round(rt_total/n,2))
+    print("Average TAT =", round(tat_total / n, 2))
+    print("Average WT =", round(wt_total / n, 2))
+    print("Average RT =", round(rt_total / n, 2))
+
 
 def show_gantt_chart():
     print("\n--- ROUND ROBIN GANTT CHART ---")
@@ -56,13 +49,10 @@ def show_gantt_chart():
     times = [intervals[0][1]] + [end for _, _, end in intervals]
     print("    ".join(str(t) for t in times))
 
-calculate_metrics()
-show_gantt_chart()
-
-
 
 def thread_task(name):
     print(name, "running | Thread ID:", current_thread().ident)
+
 
 def thread_demo():
     print("\n--- THREAD DEMO ---")
@@ -78,25 +68,10 @@ def thread_demo():
 
     print("Both threads completed.")
 
-def child_pipe(conn):
-    conn.send("Hello Parent - message from Child")
-    conn.close()
-
-def pipe_demo():
-    print("\n--- PIPE IPC DEMO ---")
-
-    parent_conn, child_conn = Pipe()
-    child = Process(target=child_pipe, args=(child_conn,))
-
-    child.start()
-    message = parent_conn.recv()
-    child.join()
-
-    print("Parent received:", message)
-
 
 def update_shared(value):
     value.value += 10
+
 
 def shared_memory_demo():
     print("\n--- SHARED MEMORY DEMO ---")
@@ -109,3 +84,10 @@ def shared_memory_demo():
     child.join()
 
     print("After child process:", shared_value.value)
+
+
+if __name__ == "__main__":
+    calculate_metrics()
+    show_gantt_chart()
+    thread_demo()
+    shared_memory_demo()
