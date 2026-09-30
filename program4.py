@@ -93,3 +93,19 @@ def pipe_demo():
     child.join()
 
     print("Parent received:", message)
+
+
+def update_shared(value):
+    value.value += 10
+
+def shared_memory_demo():
+    print("\n--- SHARED MEMORY DEMO ---")
+
+    shared_value = Value("i", 5)
+    print("Before child process:", shared_value.value)
+
+    child = Process(target=update_shared, args=(shared_value,))
+    child.start()
+    child.join()
+
+    print("After child process:", shared_value.value)
